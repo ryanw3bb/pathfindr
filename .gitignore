@@ -1,0 +1,11 @@
+# osx noise
+.DS_Store
+profile
+
+# folders
+obj/
+bin/
+Library/
+Temp/
+ProjectSettings/
+UnityPackageManager/
