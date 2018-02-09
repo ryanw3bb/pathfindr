@@ -4,46 +4,27 @@ using System.Collections.Generic;
 
 public class PFController : MonoBehaviour 
 {
+	private const float ADJACENT_MOVE_COST = 10;
+	private const float DIAGONAL_MOVE_COST = 14;
+	private const int MAX_ITERATIONS = 5000;
+
 	private PFNode[,] nodes;
 	private List<PFNode> openNodes;
 	private int xNodes, yNodes;
-	private float stdMoveCost = 10;
-	private float diagMoveCost = 14;
 
-	public List<IVector2> EvaluateScene(int sampleResolution, LayerMask obstacleLayers)
+	/*public void InitGrid(int gridXSize, int gridYSize, List<Vector2Int> closedGridRefs) 
 	{
-		List<IVector2> obstaclePositions = new List<IVector2>();
-		
-		Bounds b = new Bounds(Vector3.zero, Vector3.zero);
-		foreach(Renderer r in FindObjectsOfType(typeof(Renderer))) 
+		List<int> closedNodes = new List<int>();
+
+		foreach(Vector2Int v in closedGridRefs)
 		{
-			b.Encapsulate (r.bounds);
+			closedNodes.Add(GridRefToNodeRef(v));
 		}
 
-		Debug.Log (b.center + " " + b.size);
-		
-		RaycastHit hit;
-		Vector3 pos;
-		
-		for(int i = 0; i < sampleResolution; i++)
-		{
-			for(int j = 0; i < sampleResolution; j++)
-			{
-				pos = new Vector3((b.size.x / sampleResolution) * i, 100, (b.size.y / sampleResolution) * j);
-
-				if(Physics.Raycast(pos, -Vector3.up, out hit, obstacleLayers))
-				{
-					obstaclePositions.Add(new IVector2(j, i));
-				}
-			}
-		}
-
-		Debug.Log (obstaclePositions.Count);
-		
-		return obstaclePositions;
-	}
+		InitGrid(gridXSize, gridYSize, closedNodes);
+	}*/
 	
-	public void InitGrid(int gridXSize, int gridYSize, List<int> closedGridRefs) 
+	public void InitGrid(int gridXSize, int gridYSize, List<int> closedNodes) 
 	{
 		int nodeRef = 0;
 		
@@ -57,10 +38,10 @@ public class PFController : MonoBehaviour
 		{
 			for(int j = 0; j < xNodes; j++)
 			{
-				PFNode node = new PFNode(nodeRef, new IVector2(j, i));
+				PFNode node = new PFNode(nodeRef, new Vector2Int(j, i));
 				nodes[j, i] = node;
 				
-				if(closedGridRefs.Contains(nodeRef)) 
+				if(closedNodes.Contains(nodeRef)) 
 				{
 					CloseNode(node);
 				}
@@ -70,7 +51,7 @@ public class PFController : MonoBehaviour
 		}
 	}
 
-	public List<int> GetPath(IVector2 startPos, IVector2 targetPos, bool allowDiagonal = true)
+	public List<int> GetPath(Vector2Int startPos, Vector2Int targetPos, bool allowDiagonal = true)
 	{
 		foreach(PFNode node in nodes) 
 		{
@@ -80,13 +61,16 @@ public class PFController : MonoBehaviour
 			}
 		}
 		
-		nodes [targetPos.x, targetPos.y].Target = true;
+		nodes[targetPos.x, targetPos.y].Target = true;
+
+		Debug.Log(nodes[targetPos.x, targetPos.y].ToString());
 		
 		bool solved = false;
 		float moveCost;
-		PFNode parentNode = nodes [startPos.x, startPos.y];
+		PFNode parentNode = nodes[startPos.x, startPos.y];
 		PFNode nextNode = null;
 		PFNode currentNode = null;
+		int attempts = 0;
 		
 		while(!solved)
 		{
@@ -112,16 +96,17 @@ public class PFController : MonoBehaviour
 					
 					if(j != parentNode.Position.x && i != parentNode.Position.y)
 					{
-						moveCost = diagMoveCost;
+						moveCost = DIAGONAL_MOVE_COST;
 					}
 					else
 					{
-						moveCost = stdMoveCost;
+						moveCost = ADJACENT_MOVE_COST;
 					}
 					
 					if(currentNode.G == 0 || (parentNode.G + moveCost) < currentNode.G)
 					{
-						currentNode.Parent = parentNode;
+						//currentNode.Parent = parentNode;
+						currentNode.ParentPosition = parentNode.Position;
 						currentNode.G = parentNode.G + moveCost;
 						currentNode.F = currentNode.H + currentNode.G;
 					}
@@ -130,6 +115,10 @@ public class PFController : MonoBehaviour
 			
 			if(!solved)
 			{
+				// THE PROBLEM IS HERE I BELIEVE!
+				// NEVER REACHES TARGET
+				// IT DOESN'T CYCLE THROUGH NODES
+
 				/*if(nextNode == null)
 				{
 					Debug.Log ("can't reach target");
@@ -143,6 +132,7 @@ public class PFController : MonoBehaviour
 						if(nextNode == null || node.F < nextNode.F)
 						{
 							nextNode = node;
+							break;
 						}
 					}
 				}
@@ -152,27 +142,36 @@ public class PFController : MonoBehaviour
 				parentNode = nextNode;
 				nextNode = null;
 			}
+
+			attempts++;
+
+			if(attempts > MAX_ITERATIONS)
+			{
+				break;
+			}
 		}
 		
-		List<int> path = new List<int> ();
-		currentNode = nodes [targetPos.x, targetPos.y];
+		List<int> path = new List<int>();
+		currentNode = nodes[targetPos.x, targetPos.y];
 		
 		do
 		{
 			path.Add(currentNode.NodeRef);
-			currentNode = currentNode.Parent;
+			//currentNode = currentNode.Parent;
+			currentNode = nodes[currentNode.ParentPosition.x, currentNode.ParentPosition.y];
 		} 
-		while (currentNode != nodes [startPos.x, startPos.y]);
+		while(currentNode != nodes[startPos.x, startPos.y]);
 		
-		path.Add (nodes [startPos.x, startPos.y].NodeRef);
-		path.Reverse ();
+		path.Add(nodes[startPos.x, startPos.y].NodeRef);
+		path.Reverse();
 		
 		return path;
 	}
 	
 	private void CloseNode(PFNode node)
 	{
+		//Debug.Log(node.ToString());
 		node.Open = false;
-		openNodes.Remove (node);
+		openNodes.Remove(node);
 	}
 }

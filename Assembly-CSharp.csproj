@@ -52,9 +52,9 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\GameController.cs" />
-     <Compile Include="Assets\Scripts\Pathfinding\PFController.cs" />
-     <Compile Include="Assets\Scripts\Pathfinding\PFNode.cs" />
-     <Compile Include="Assets\Scripts\Pathfinding\Structs\IntVector2.cs" />
+     <Compile Include="Assets\Scripts\pathfindr\PFController.cs" />
+     <Compile Include="Assets\Scripts\pathfindr\PFNode.cs" />
+     <Compile Include="Assets\Scripts\pathfindr\PFTools.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity2017.3.0/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

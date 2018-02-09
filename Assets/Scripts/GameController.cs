@@ -4,18 +4,22 @@ using System.Collections.Generic;
 
 public class GameController : MonoBehaviour 
 {
-	public LayerMask layerMask;
+	public LayerMask ObstacleLayer;
+
+	private const int GRID_SIZE = 10;
 
 	private void Start () 
 	{
 		PFController pathfinder = gameObject.AddComponent<PFController>();
-		//List<IVector2> obstacles = pathfinder.EvaluateScene(100, layerMask);
-		pathfinder.InitGrid(6, 7, new List<int> () { 15, 25, 27, 33 });
 
-		List<int> path = pathfinder.GetPath(new IVector2(1, 2), new IVector2(4, 5), true);
+		List<int> obstacles = PFTools.EvaluateScene(GRID_SIZE, ObstacleLayer);
+
+		pathfinder.InitGrid(GRID_SIZE, GRID_SIZE, new List<int>());
+
+		List<int> path = pathfinder.GetPath(new Vector2Int(0, 0), new Vector2Int(8, 8), false);
 		foreach(int gridref in path) 
 		{
-			Debug.Log (gridref);
+			Debug.Log(gridref);
 		}
 	}
 }
