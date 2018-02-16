@@ -12,7 +12,7 @@ public class GameController : MonoBehaviour
 	{
 		PFController pathfinder = gameObject.AddComponent<PFController>();
 
-		List<int> obstacles = PFTools.EvaluateScene(GRID_SIZE, ObstacleLayer);
+		List<int> obstacles = PFScene.Evaluate(GRID_SIZE, ObstacleLayer);
 
 		pathfinder.InitGrid(GRID_SIZE, GRID_SIZE, new List<int>());
 

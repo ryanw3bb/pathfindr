@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class PFTools : MonoBehaviour 
+public class PFScene : MonoBehaviour 
 {
-	public static List<int> EvaluateScene(int sampleResolution, LayerMask obstacleLayers)
+	public static List<int> Evaluate(int sampleResolution, LayerMask obstacleLayers)
 	{
 		List<int> obstaclePositions = new List<int>();
 

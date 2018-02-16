@@ -2,8 +2,8 @@
 
 public class PFNode 
 {
-	// H - Heuristic (distance to target using Manhattan algorithm)
-	// G - Movement Cost (the cost of getting to this node from the parent node)
+	// H - Heuristic (distance to target node using Manhattan algorithm)
+	// G - Movement Cost (the cost of getting to this node from the start node)
 	// F - H + G
 
 	public int NodeRef { get; set; }
@@ -13,9 +13,6 @@ public class PFNode
 	public float H { get; set; }
 	public float G { get; set; }
 	public float F { get; set; }
-
-	// TODO: remove explicit reference to parent node - use index instead
-	public PFNode Parent { get; set; }
 	public Vector2Int ParentPosition { get; set; }
 
 	public PFNode(int nodeRef, Vector2Int position, bool open = true, bool target = false)
@@ -28,6 +25,6 @@ public class PFNode
 
 	public override string ToString()
 	{
-		return string.Format("[PFNode: NodeRef={0}, Position={1}, Open={2}, Target={3}, H={4}, G={5}, F={6}, Parent={7}, ParentPosition={8}]", NodeRef, Position, Open, Target, H, G, F, Parent, ParentPosition);
+		return string.Format("[PFNode: NodeRef={0}, Position={1}, Open={2}, Target={3}, H={4}, G={5}, F={6}, ParentPosition={7}]", NodeRef, Position, Open, Target, H, G, F, ParentPosition);
 	}
 }
