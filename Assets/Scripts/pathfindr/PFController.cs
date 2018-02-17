@@ -10,21 +10,17 @@ public class PFController : MonoBehaviour
 
 	private PFNode[,] nodes;
 	private List<PFNode> openNodes;
-	private int xNodes, yNodes;
 	
 	public void InitGrid(int gridXSize, int gridYSize, List<int> closedNodes) 
 	{
 		int nodeRef = 0;
 		
-		xNodes = gridXSize;
-		yNodes = gridYSize;
-		
-		nodes = new PFNode[xNodes, yNodes];
+		nodes = new PFNode[gridXSize, gridYSize];
 		openNodes = new List<PFNode>();
 		
-		for(int i = 0; i < yNodes; i++)
+		for(int i = 0; i < gridYSize; i++)
 		{
-			for(int j = 0; j < xNodes; j++)
+			for(int j = 0; j < gridXSize; j++)
 			{
 				PFNode node = new PFNode(nodeRef, new Vector2Int(j, i));
 				nodes[j, i] = node;
@@ -71,11 +67,11 @@ public class PFController : MonoBehaviour
 			
 			for(int i = parentNode.Position.y-1; i <= parentNode.Position.y+1; i++)
 			{
-				if(i < 0 || i >= yNodes) { continue; }
+				if(i < 0 || i >= nodes.GetLength(1)) { continue; }
 				
 				for(int j = parentNode.Position.x-1; j <= parentNode.Position.x+1; j++)
 				{
-					if(j < 0 || j >= xNodes) { continue; }
+					if(j < 0 || j >= nodes.GetLength(0)) { continue; }
 
 					if(!allowDiagonal && j != parentNode.Position.x && i != parentNode.Position.y) { continue; }
 					
