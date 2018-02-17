@@ -4,22 +4,52 @@ using System.Collections.Generic;
 
 public class GameController : MonoBehaviour 
 {
-	public LayerMask ObstacleLayer;
-
+	private const bool ALLOW_DIAGONAL = false;
 	private const int GRID_SIZE = 10;
+	private const string GROUND_LAYER = "Ground";
 
-	private void Start () 
+	private LayerMask ObstacleLayer = 1 << 8;
+	private PFScene scene;
+	private PFController pathfinder;
+	private Vector2Int currentPos;
+
+	private void Start() 
 	{
-		PFController pathfinder = gameObject.AddComponent<PFController>();
+		pathfinder = gameObject.AddComponent<PFController>();
+		scene = gameObject.AddComponent<PFScene>();
 
-		List<int> obstacles = PFScene.Evaluate(GRID_SIZE, ObstacleLayer);
+		List<int> obstacles = scene.Evaluate(GRID_SIZE, ObstacleLayer);
 
-		pathfinder.InitGrid(GRID_SIZE, GRID_SIZE, new List<int>());
+		currentPos = new Vector2Int(0, 0);
 
-		List<int> path = pathfinder.GetPath(new Vector2Int(0, 0), new Vector2Int(8, 8), false);
+		pathfinder.InitGrid(GRID_SIZE, GRID_SIZE, obstacles);
+
+		/*List<int> path = pathfinder.GetPath(currentPos, new Vector2Int(8, 8), ALLOW_DIAGONAL);
 		foreach(int gridref in path) 
 		{
 			Debug.Log(gridref);
+		}*/
+	}
+
+	private void Update()
+	{
+		if(Input.GetMouseButtonDown(0))
+		{
+			Vector2Int? newPos = scene.CheckHit(Input.mousePosition, GROUND_LAYER);
+
+			if(newPos != null)
+			{
+				List<Vector2Int> path = pathfinder.GetPath(currentPos, newPos.Value, ALLOW_DIAGONAL);
+				if(path != null)
+				{
+					foreach(Vector2Int gridref in path)
+					{
+						Debug.Log(gridref);
+					}
+
+					currentPos = path[path.Count - 1];
+				}
+			}
 		}
 	}
 }

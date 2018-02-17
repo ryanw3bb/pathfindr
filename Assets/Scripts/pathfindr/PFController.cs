@@ -31,7 +31,7 @@ public class PFController : MonoBehaviour
 				
 				if(closedNodes.Contains(nodeRef)) 
 				{
-					CloseNode(node);
+					CloseNode(node, true);
 				}
 				
 				nodeRef++;
@@ -39,27 +39,31 @@ public class PFController : MonoBehaviour
 		}
 	}
 
-	public List<int> GetPath(Vector2Int startPos, Vector2Int targetPos, bool allowDiagonal = true)
+	public List<Vector2Int> GetPath(Vector2Int startPos, Vector2Int targetPos, bool allowDiagonal = true)
 	{
-		// find the distance of each node from target grid ref
-		foreach(PFNode node in nodes) 
-		{
-			if(node.Open) 
-			{
-				node.H = GetManhattanDistance(node.Position, targetPos);
-			}
-		}
-		
-		nodes[targetPos.x, targetPos.y].Target = true;
+		if(startPos == targetPos) { return null; }
 
-		Debug.Log(nodes[targetPos.x, targetPos.y].ToString());
-		
+		openNodes = new List<PFNode>();
 		bool solved = false;
 		float moveCost;
 		PFNode parentNode = nodes[startPos.x, startPos.y];
 		PFNode nextNode = null;
 		PFNode currentNode = null;
-		int attempts = 0;
+		int iterations = 0;
+
+		foreach(PFNode node in nodes) 
+		{
+			if(!node.Forbidden) 
+			{
+				node.Reset();
+				node.H = GetManhattanDistance(node.Position, targetPos);
+			}
+		}
+
+		nodes[targetPos.x, targetPos.y].Target = true;
+
+		Debug.Log(">>> CURRENT : " + nodes[startPos.x, startPos.y].ToString());
+		Debug.Log(">>> TARGET : " + nodes[targetPos.x, targetPos.y].ToString());
 		
 		while(!solved)
 		{
@@ -67,15 +71,12 @@ public class PFController : MonoBehaviour
 			
 			for(int i = parentNode.Position.y-1; i <= parentNode.Position.y+1; i++)
 			{
-				// check bounds y
 				if(i < 0 || i >= yNodes) { continue; }
 				
 				for(int j = parentNode.Position.x-1; j <= parentNode.Position.x+1; j++)
 				{
-					// check bounds x
 					if(j < 0 || j >= xNodes) { continue; }
 
-					// diagonal node check
 					if(!allowDiagonal && j != parentNode.Position.x && i != parentNode.Position.y) { continue; }
 					
 					currentNode = nodes[j, i];
@@ -86,22 +87,13 @@ public class PFController : MonoBehaviour
 					
 					if(currentNode.Target) { solved = true; }
 					
-					if(j != parentNode.Position.x && i != parentNode.Position.y)
-					{
-						moveCost = DIAGONAL_MOVE_COST;
-					}
-					else
-					{
-						moveCost = ADJACENT_MOVE_COST;
-					}
+					moveCost = (j != parentNode.Position.x && i != parentNode.Position.y) ? DIAGONAL_MOVE_COST : ADJACENT_MOVE_COST;
 						
 					if(currentNode.G == 0 || (parentNode.G + moveCost) < currentNode.G)
 					{
 						currentNode.ParentPosition = parentNode.Position;
 						currentNode.G = parentNode.G + moveCost;
 						currentNode.F = currentNode.H + currentNode.G;
-
-						Debug.Log(currentNode.ToString());
 					}
 				}
 			}
@@ -119,31 +111,29 @@ public class PFController : MonoBehaviour
 					}
 				}
 
-				Debug.Log("next node: " + nextNode.NodeRef);
-				
 				parentNode = nextNode;
 				nextNode = null;
 			}
 
-			attempts++;
+			iterations++;
 
-			if(attempts > MAX_ITERATIONS)
+			if(iterations > MAX_ITERATIONS)
 			{
 				break;
 			}
 		}
 		
-		List<int> path = new List<int>();
+		List<Vector2Int> path = new List<Vector2Int>();
 		currentNode = nodes[targetPos.x, targetPos.y];
 		
 		do
 		{
-			path.Add(currentNode.NodeRef);
+			path.Add(currentNode.Position);
 			currentNode = nodes[currentNode.ParentPosition.x, currentNode.ParentPosition.y];
 		} 
 		while(currentNode != nodes[startPos.x, startPos.y]);
 		
-		path.Add(nodes[startPos.x, startPos.y].NodeRef);
+		path.Add(nodes[startPos.x, startPos.y].Position);
 		path.Reverse();
 		
 		return path;
@@ -154,9 +144,14 @@ public class PFController : MonoBehaviour
 		return Mathf.Abs((p1.x - p2.x) + (p1.y - p2.y));
 	}
 	
-	private void CloseNode(PFNode node)
+	private void CloseNode(PFNode node, bool forbidden = false)
 	{
 		node.Open = false;
 		openNodes.Remove(node);
+
+		if(forbidden)
+		{
+			node.Forbidden = true;
+		}
 	}
 }
