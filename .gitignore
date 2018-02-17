@@ -1,4 +1,4 @@
-# osx noise
+# osx
 .DS_Store
 profile
 
@@ -9,3 +9,9 @@ Library/
 Temp/
 ProjectSettings/
 UnityPackageManager/
+
+# file extensions
+*.csproj
+*.userprefs
+*.sln
+*.meta
