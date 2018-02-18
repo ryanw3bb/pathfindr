@@ -8,6 +8,11 @@ namespace Pathfindr
 	{
 		private PFNode[,] nodes;
 		private List<PFNode> openNodes;
+
+		public PFEngine(int gridXSize = 0, int gridYSize = 0, List<int> closedNodes = null)
+		{
+			InitGrid(gridXSize, gridYSize, closedNodes);
+		}
 		
 		public void InitGrid(int gridXSize, int gridYSize, List<int> closedNodes) 
 		{
@@ -22,8 +27,8 @@ namespace Pathfindr
 				{
 					PFNode node = new PFNode(nodeRef, new Vector2Int(j, i));
 					nodes[j, i] = node;
-					
-					if(closedNodes.Contains(nodeRef)) 
+
+					if(!closedNodes.IsNullOrEmpty() && closedNodes.Contains(nodeRef)) 
 					{
 						CloseNode(node, true);
 					}

@@ -9,26 +9,17 @@ public class GameController : MonoBehaviour
 	private const string GROUND_LAYER = "Ground";
 
 	private LayerMask ObstacleLayer = 1 << 8;
+	private Vector2Int currentPos = new Vector2Int(0, 0);
 	private PFScene scene;
 	private PFEngine pathfinder;
-	private Vector2Int currentPos;
 
 	private void Start() 
 	{
-		pathfinder = new PFEngine();
 		scene = gameObject.AddComponent<PFScene>();
 
 		List<int> obstacles = scene.Evaluate(GRID_SIZE, ObstacleLayer);
 
-		currentPos = new Vector2Int(0, 0);
-
-		pathfinder.InitGrid(GRID_SIZE, GRID_SIZE, obstacles);
-
-		/*List<int> path = pathfinder.GetPath(currentPos, new Vector2Int(8, 8), ALLOW_DIAGONAL);
-		foreach(int gridref in path) 
-		{
-			Debug.Log(gridref);
-		}*/
+		pathfinder = new PFEngine(GRID_SIZE, GRID_SIZE, obstacles);
 	}
 
 	private void Update()
