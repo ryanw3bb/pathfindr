@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PFArea : MonoBehaviour 
+namespace Pathfindr 
 {
-	
+	public class PFArea : MonoBehaviour 
+	{
+		
+	}
 }

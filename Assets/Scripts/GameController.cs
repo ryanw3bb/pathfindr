@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using Pathfindr;
 
 public class GameController : MonoBehaviour 
 {
@@ -10,12 +10,12 @@ public class GameController : MonoBehaviour
 
 	private LayerMask ObstacleLayer = 1 << 8;
 	private PFScene scene;
-	private PFController pathfinder;
+	private PFEngine pathfinder;
 	private Vector2Int currentPos;
 
 	private void Start() 
 	{
-		pathfinder = gameObject.AddComponent<PFController>();
+		pathfinder = new PFEngine();
 		scene = gameObject.AddComponent<PFScene>();
 
 		List<int> obstacles = scene.Evaluate(GRID_SIZE, ObstacleLayer);
