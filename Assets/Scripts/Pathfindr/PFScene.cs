@@ -44,9 +44,9 @@ namespace Pathfindr
 			return ObstaclePositions;
 		}
 
-		public Vector2Int? CheckHit(Vector3 mousePosition, string groundLayer)
+		public Vector2Int? CheckHit(Vector3 screenPoint, string groundLayer)
 		{
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			Ray ray = Camera.main.ScreenPointToRay(screenPoint);
 			RaycastHit hit;
 
 			if(Physics.Raycast(ray, out hit))
