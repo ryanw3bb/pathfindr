@@ -6,10 +6,6 @@ namespace Pathfindr
 {
 	public class PFEngine
 	{
-		private const float ADJACENT_MOVE_COST = 1;
-		private const float DIAGONAL_MOVE_COST = 1.4f;
-		private const int MAX_ITERATIONS = 5000;
-
 		private PFNode[,] nodes;
 		private List<PFNode> openNodes;
 		
@@ -85,7 +81,7 @@ namespace Pathfindr
 						
 						if(currentNode.Target) { solved = true; }
 						
-						moveCost = (j != parentNode.Position.x && i != parentNode.Position.y) ? DIAGONAL_MOVE_COST : ADJACENT_MOVE_COST;
+						moveCost = (j != parentNode.Position.x && i != parentNode.Position.y) ? PFSettings.DIAGONAL_MOVE_COST : PFSettings.ADJACENT_MOVE_COST;
 							
 						if(currentNode.G == 0 || (parentNode.G + moveCost) < currentNode.G)
 						{
@@ -115,7 +111,7 @@ namespace Pathfindr
 
 				iterations++;
 
-				if(iterations > MAX_ITERATIONS)
+				if(iterations > PFSettings.MAX_ITERATIONS)
 				{
 					break;
 				}
