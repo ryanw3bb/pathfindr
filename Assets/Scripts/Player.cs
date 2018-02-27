@@ -2,10 +2,10 @@
 
 public class Player : MonoBehaviour
 {
-	[HideInInspector] public Vector2Int GridPosition;
-	[HideInInspector] public Vector3 WorldPosition;
-	[HideInInspector] public bool AllowDiagonal = false;
-	[HideInInspector] public float MoveSpeed = 1f;
+	public Vector2Int GridPosition;
+	public Vector3 WorldPosition;
+	public bool AllowDiagonal = false;
+	public float MoveSpeed = 1f;
 
 	public override string ToString()
 	{

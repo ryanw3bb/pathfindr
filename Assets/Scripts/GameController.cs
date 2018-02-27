@@ -10,7 +10,7 @@ public class GameController : MonoBehaviour
 	private const string GROUND_LAYER = "Ground";
 
 	private LayerMask obstacleLayer = 1 << 8;
-	private PFScene scene;
+	private PFGridScene scene;
 	private PFEngine pathfinder;
 	private List<Vector2Int> waypoints;
 	private Vector3 nextWaypointWorldPos;
@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour
 
 	private void Start() 
 	{
-		scene = gameObject.AddComponent<PFScene>();
+		scene = gameObject.AddComponent<PFGridScene>();
 
 		List<int> obstacles = scene.Evaluate(GRID_SIZE, obstacleLayer);
 
