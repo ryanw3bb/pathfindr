@@ -10,6 +10,7 @@ Temp/
 ProjectSettings/
 UnityPackageManager/
 Assets/HQDemo/
+.vs/
 
 # file extensions
 *.csproj

@@ -121,24 +121,32 @@ namespace Pathfindr
 
 				if(iterations > PFConstants.MAX_ITERATIONS)
 				{
+                    Debug.LogError("Pathfindr: Max iterations reached");
 					break;
 				}
 			}
 			
-			List<Vector2Int> path = new List<Vector2Int>();
-			currentNode = nodes[targetPos.x, targetPos.y];
-			
-			do
-			{
-				path.Add(currentNode.Position);
-				currentNode = nodes[currentNode.ParentPosition.x, currentNode.ParentPosition.y];
-			} 
-			while(currentNode != nodes[startPos.x, startPos.y]);
-			
-			path.Add(nodes[startPos.x, startPos.y].Position);
-			path.Reverse();
-			
-			return path;
+            if(solved)
+            {
+                List<Vector2Int> path = new List<Vector2Int>();
+                currentNode = nodes[targetPos.x, targetPos.y];
+
+                do
+                {
+                    path.Add(currentNode.Position);
+                    currentNode = nodes[currentNode.ParentPosition.x, currentNode.ParentPosition.y];
+                }
+                while (currentNode != nodes[startPos.x, startPos.y]);
+
+                path.Add(nodes[startPos.x, startPos.y].Position);
+                path.Reverse();
+
+                return path;
+            }
+            else
+            {
+                return null;
+            }
 		}
 		
 		private void CloseNode(PFNode node, bool forbidden = false)
