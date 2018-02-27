@@ -8,7 +8,9 @@ public class GameController : MonoBehaviour
 	private const int GRID_SIZE = 10;
 	private const string GROUND_LAYER = "Ground";
 
-	private LayerMask ObstacleLayer = 1 << 8;
+	public GameObject Character;
+
+	private LayerMask obstacleLayer = 1 << 8;
 	private Vector2Int currentPos = new Vector2Int(0, 0);
 	private PFScene scene;
 	private PFEngine pathfinder;
@@ -17,7 +19,7 @@ public class GameController : MonoBehaviour
 	{
 		scene = gameObject.AddComponent<PFScene>();
 
-		List<int> obstacles = scene.Evaluate(GRID_SIZE, ObstacleLayer);
+		List<int> obstacles = scene.Evaluate(GRID_SIZE, obstacleLayer);
 
 		pathfinder = new PFEngine(GRID_SIZE, GRID_SIZE, obstacles);
 	}
