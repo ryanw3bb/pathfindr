@@ -4,16 +4,17 @@ using Pathfindr;
 
 public class GameController : MonoBehaviour 
 {
-	private const bool ALLOW_DIAGONAL = false;
+	public Player Player1;
+
 	private const int GRID_SIZE = 10;
 	private const string GROUND_LAYER = "Ground";
 
-	public GameObject Character;
-
 	private LayerMask obstacleLayer = 1 << 8;
-	private Vector2Int currentPos = new Vector2Int(0, 0);
 	private PFScene scene;
 	private PFEngine pathfinder;
+	private List<Vector2Int> waypoints;
+	private Vector3 nextWaypointWorldPos;
+	private float moveTimer;
 
 	private void Start() 
 	{
@@ -21,7 +22,10 @@ public class GameController : MonoBehaviour
 
 		List<int> obstacles = scene.Evaluate(GRID_SIZE, obstacleLayer);
 
-		pathfinder = new PFEngine(GRID_SIZE, GRID_SIZE, obstacles);
+		Player1.WorldPosition = nextWaypointWorldPos = Player1.transform.position;
+		Player1.GridPosition = scene.WorldPositionToGrid(Player1.WorldPosition);
+
+		pathfinder = new PFEngine(GRID_SIZE, obstacles);
 	}
 
 	private void Update()
@@ -32,17 +36,44 @@ public class GameController : MonoBehaviour
 
 			if(newPos != null)
 			{
-				List<Vector2Int> path = pathfinder.GetPath(currentPos, newPos.Value, ALLOW_DIAGONAL);
-				if(path != null)
+				if(!waypoints.IsNullOrEmpty())
 				{
-					foreach(Vector2Int gridref in path)
-					{
-						Debug.Log(gridref);
-					}
-
-					currentPos = path[path.Count - 1];
+					waypoints = pathfinder.GetPath(waypoints[0], newPos.Value, Player1.AllowDiagonal);
+				}
+				else
+				{
+					waypoints = pathfinder.GetPath(Player1.GridPosition, newPos.Value, Player1.AllowDiagonal);
 				}
 			}
+		}
+
+		if(!waypoints.IsNullOrEmpty())
+		{
+			MovePlayer();
+		}
+	}
+
+	private void MovePlayer()
+	{
+		if(Player1.transform.position == nextWaypointWorldPos)
+		{
+			moveTimer = 0;
+
+			Player1.GridPosition = waypoints[0];
+			Player1.WorldPosition = nextWaypointWorldPos;
+
+			waypoints.RemoveAt(0);
+
+			if(!waypoints.IsNullOrEmpty())
+			{
+				nextWaypointWorldPos = scene.GridToWorldPosition(waypoints[0]);
+			}
+		}
+		else
+		{
+			moveTimer += Mathf.Pow(Player1.MoveSpeed, Time.deltaTime) / 10f;
+
+			Player1.transform.position = Vector3.Lerp(Player1.WorldPosition, nextWaypointWorldPos, moveTimer);
 		}
 	}
 }

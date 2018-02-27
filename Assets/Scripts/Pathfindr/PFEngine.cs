@@ -9,21 +9,21 @@ namespace Pathfindr
 		private PFNode[,] nodes;
 		private List<PFNode> openNodes;
 
-		public PFEngine(int gridXSize = 0, int gridYSize = 0, List<int> closedNodes = null)
+		public PFEngine(int gridSize = 0, List<int> closedNodes = null)
 		{
-			InitGrid(gridXSize, gridYSize, closedNodes);
+			InitGrid(gridSize, closedNodes);
 		}
 		
-		public void InitGrid(int gridXSize, int gridYSize, List<int> closedNodes) 
+		public void InitGrid(int gridSize, List<int> closedNodes) 
 		{
 			int nodeRef = 0;
 			
-			nodes = new PFNode[gridXSize, gridYSize];
+			nodes = new PFNode[gridSize, gridSize];
 			openNodes = new List<PFNode>();
 			
-			for(int i = 0; i < gridYSize; i++)
+			for(int i = 0; i < gridSize; i++)
 			{
-				for(int j = 0; j < gridXSize; j++)
+				for(int j = 0; j < gridSize; j++)
 				{
 					PFNode node = new PFNode(nodeRef, new Vector2Int(j, i));
 					nodes[j, i] = node;
@@ -41,6 +41,12 @@ namespace Pathfindr
 		public List<Vector2Int> GetPath(Vector2Int startPos, Vector2Int targetPos, bool allowDiagonal = true)
 		{
 			if(startPos == targetPos) { return null; }
+
+			if(PFConstants.LOGGING)
+			{
+				Debug.Log(">>> CURRENT : " + nodes[startPos.x, startPos.y].ToString());
+				Debug.Log(">>> TARGET : " + nodes[targetPos.x, targetPos.y].ToString());
+			}
 
 			openNodes = new List<PFNode>();
 			bool solved = false;
@@ -60,9 +66,6 @@ namespace Pathfindr
 			}
 
 			nodes[targetPos.x, targetPos.y].Target = true;
-
-			Debug.Log(">>> CURRENT : " + nodes[startPos.x, startPos.y].ToString());
-			Debug.Log(">>> TARGET : " + nodes[targetPos.x, targetPos.y].ToString());
 			
 			while(!solved)
 			{
@@ -86,7 +89,7 @@ namespace Pathfindr
 						
 						if(currentNode.Target) { solved = true; }
 						
-						moveCost = (j != parentNode.Position.x && i != parentNode.Position.y) ? PFSettings.DIAGONAL_MOVE_COST : PFSettings.ADJACENT_MOVE_COST;
+						moveCost = (j != parentNode.Position.x && i != parentNode.Position.y) ? PFConstants.DIAGONAL_MOVE_COST : PFConstants.ADJACENT_MOVE_COST;
 							
 						if(currentNode.G == 0 || (parentNode.G + moveCost) < currentNode.G)
 						{
@@ -116,7 +119,7 @@ namespace Pathfindr
 
 				iterations++;
 
-				if(iterations > PFSettings.MAX_ITERATIONS)
+				if(iterations > PFConstants.MAX_ITERATIONS)
 				{
 					break;
 				}
