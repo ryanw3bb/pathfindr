@@ -44,8 +44,8 @@ namespace Pathfindr
 
 			if(PFConstants.LOGGING)
 			{
-				Debug.Log(">>> CURRENT : " + nodes[startPos.x, startPos.y].ToString());
-				Debug.Log(">>> TARGET : " + nodes[targetPos.x, targetPos.y].ToString());
+				Debug.Log("Pathfindr -> Start Node: " + nodes[startPos.x, startPos.y].ToString());
+				Debug.Log("Pathfindr -> Target Node: " + nodes[targetPos.x, targetPos.y].ToString());
 			}
 
 			openNodes = new List<PFNode>();
@@ -71,11 +71,11 @@ namespace Pathfindr
 			{
 				CloseNode(parentNode);
 				
-				for(int i = parentNode.Position.y-1; i <= parentNode.Position.y+1; i++)
+				for(int i = parentNode.Position.y - 1; i <= parentNode.Position.y + 1; i++)
 				{
 					if(i < 0 || i >= nodes.GetLength(1)) { continue; }
 					
-					for(int j = parentNode.Position.x-1; j <= parentNode.Position.x+1; j++)
+					for(int j = parentNode.Position.x - 1; j <= parentNode.Position.x + 1; j++)
 					{
 						if(j < 0 || j >= nodes.GetLength(0)) { continue; }
 
@@ -136,7 +136,7 @@ namespace Pathfindr
                     path.Add(currentNode.Position);
                     currentNode = nodes[currentNode.ParentPosition.x, currentNode.ParentPosition.y];
                 }
-                while (currentNode != nodes[startPos.x, startPos.y]);
+                while(currentNode != nodes[startPos.x, startPos.y]);
 
                 path.Add(nodes[startPos.x, startPos.y].Position);
                 path.Reverse();
