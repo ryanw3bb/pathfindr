@@ -1,6 +1,6 @@
 # Pathfindr
 
-![gif](http://ryanwebb.com/images/pathfindrr.gif)
+![gif](https://ryanwebb.com/images/pathfindrr.gif)
 
 Pathfinding system using the principles of the A* search algorithm.
 
