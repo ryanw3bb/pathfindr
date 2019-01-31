@@ -11,6 +11,9 @@ ProjectSettings/
 UnityPackageManager/
 Assets/HQDemo/
 .vs/
+Assets/Scenes
+Assets/Scripts/Demo
+Packages/
 
 # file extensions
 *.csproj
