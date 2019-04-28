@@ -91,7 +91,7 @@ namespace Pathfindr
 						
 						moveCost = (j != parentNode.Position.x && i != parentNode.Position.y) ? PFConstants.DIAGONAL_MOVE_COST : PFConstants.ADJACENT_MOVE_COST;
 							
-						if(currentNode.G == 0 || (parentNode.G + moveCost) < currentNode.G)
+						if(currentNode.G == 0 || (parentNode.G + moveCost) > currentNode.G)
 						{
 							currentNode.ParentPosition = parentNode.Position;
 							currentNode.G = parentNode.G + moveCost;
