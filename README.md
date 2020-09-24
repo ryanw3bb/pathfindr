@@ -1,10 +1,10 @@
 # Pathfindr
 
-![gif](https://ryanwebb.com/images/pathfindrr.gif)
+![gif](https://ryanwebb.com/images/pathfindrrr.gif)
 
-Pathfinding system using the principles of the A* search algorithm.
+Pathfinding using the A* search algorithm.
 
-Main code located in Assets/Scripts/Pathfindr should you want to port it into your project or extend it.
+Main code located in Assets/Scripts/Pathfindr should you want to use it in your project or extend it.
 
 Environment assets in the preview gif are from Mikael Gustafsson’s Stylized Nature Pack: http://u3d.as/gmF
 
