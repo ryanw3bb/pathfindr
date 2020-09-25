@@ -4,8 +4,6 @@
 
 Pathfinding using the A* search algorithm.
 
-Main code located in Assets/Scripts/Pathfindr should you want to use it in your project or extend it.
-
 Environment assets in the preview gif are from Mikael Gustafsson’s Stylized Nature Pack: http://u3d.as/gmF
 
 
