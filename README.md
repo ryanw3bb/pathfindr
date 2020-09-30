@@ -4,8 +4,6 @@
 
 Pathfinding using the A* search algorithm.
 
-Environment assets in the preview gif are from Mikael Gustafsson’s Stylized Nature Pack: http://u3d.as/gmF
-
 
 ## Usage
 
